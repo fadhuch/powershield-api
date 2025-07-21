@@ -1,0 +1,29 @@
+{
+  "name": "powershield-api",
+  "version": "2.0.0",
+  "description": "Modular REST API for Powershield with Users and Gallery collections",
+  "type": "module",
+  "main": "api/index.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "vercel-dev": "vercel dev",
+    "build": "echo 'No build step required'",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": ">=18.x"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.0",
+    "express": "^4.19.2",
+    "mongodb": "^6.17.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  },
+  "keywords": ["api", "mongodb", "express", "users", "gallery", "modular"],
+  "author": "",
+  "license": "MIT"
+}

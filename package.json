@@ -10,7 +10,8 @@
     "vercel-dev": "vercel dev",
     "build": "echo 'No build step required'",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "test-connection": "node test-connection.js"
+    "test-connection": "node test-connection.js",
+    "ssl-help": "node ssl-help.js"
   },
   "engines": {
     "node": ">=18.x"

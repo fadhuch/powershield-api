@@ -22,25 +22,53 @@ export async function connectToDatabase() {
 
   try {
     const client = new MongoClient(MONGODB_URI, {
-      serverSelectionTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 30000, // Increased timeout
+      connectTimeoutMS: 30000,
+      socketTimeoutMS: 30000,
       maxPoolSize: 10,
       minPoolSize: 2,
+      retryWrites: true,
+      w: 'majority',
+      // SSL/TLS configuration
+      tls: true,
+      tlsAllowInvalidCertificates: false,
+      tlsAllowInvalidHostnames: false,
+      // Additional options for better connection stability
+      compressors: ['snappy', 'zlib'],
+      maxIdleTimeMS: 30000,
+      heartbeatFrequencyMS: 10000,
+      // Handle connection issues
     })
     
+    console.log('🔗 Attempting to connect to MongoDB Atlas...')
     await client.connect()
+    
+    // Test the connection
+    await client.db('admin').command({ ping: 1 })
+    
     const db = client.db(DB_NAME)
     
     cachedClient = client
     cachedDb = db
     
-    console.log('✅ Connected to MongoDB Atlas')
+    console.log('✅ Connected to MongoDB Atlas successfully')
     
     // Create indexes for better performance
     await createIndexes(db)
     
     return { client, db }
   } catch (error) {
-    console.error('❌ MongoDB connection error:', error)
+    console.error('❌ MongoDB connection error:', error.message)
+    
+    // Provide more specific error guidance
+    if (error.message.includes('SSL') || error.message.includes('TLS')) {
+      console.error('💡 SSL/TLS Error Troubleshooting:')
+      console.error('   1. Check your MongoDB Atlas connection string')
+      console.error('   2. Ensure your IP address is whitelisted in Atlas')
+      console.error('   3. Verify your cluster is running and accessible')
+      console.error('   4. Try using a different network connection')
+    }
+    
     throw error
   }
 }

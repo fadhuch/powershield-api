@@ -6,10 +6,27 @@ export const ensureDBConnection = async (req, res, next) => {
     await connectToDatabase()
     next()
   } catch (error) {
-    console.error('Database connection failed:', error)
-    res.status(500).json({
+    console.error('Database connection failed:', error.message)
+    
+    // Provide more specific error responses
+    let errorMessage = 'Database connection failed'
+    let statusCode = 500
+    
+    if (error.message.includes('SSL') || error.message.includes('TLS')) {
+      errorMessage = 'Database SSL connection error. Please check server configuration.'
+      console.error('💡 SSL Error - Check MongoDB Atlas settings and network connectivity')
+    } else if (error.message.includes('timeout')) {
+      errorMessage = 'Database connection timeout. Please try again.'
+      statusCode = 503
+    } else if (error.message.includes('authentication')) {
+      errorMessage = 'Database authentication failed. Please check credentials.'
+      statusCode = 401
+    }
+    
+    res.status(statusCode).json({
       success: false,
-      message: 'Database connection failed'
+      message: errorMessage,
+      timestamp: new Date().toISOString()
     })
   }
 }

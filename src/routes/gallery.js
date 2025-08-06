@@ -1,6 +1,6 @@
-import express from 'express'
-import GalleryController from '../controllers/galleryController.js'
-import { ensureDBConnection } from '../middleware/index.js'
+const express = require('express');
+const GalleryController = require('../controllers/galleryController.js');
+const { ensureDBConnection } = require('../middleware/index.js');
 
 const router = express.Router()
 
@@ -19,4 +19,4 @@ router.put('/:id', GalleryController.updateGalleryItem)
 router.delete('/:id', GalleryController.deleteGalleryItem)
 router.post('/:id/like', GalleryController.toggleLike)
 
-export default router
+module.exports = router;

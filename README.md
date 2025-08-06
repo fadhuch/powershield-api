@@ -1,12 +1,14 @@
 # Powershield API
 
-Modular REST API for Powershield with Users and Gallery collections management.
+Modular REST API for Powershield with comprehensive collection management including Users, Gallery, Contacts, and Career Management.
 
 ## Features
 
 - **Users Collection**: Complete CRUD operations for user management
 - **Gallery Collection**: Image gallery management with categories, likes, and search
 - **Contact Collection**: Contact form management with status tracking and admin features
+- **Career Management**: Job postings, applications, and admin user management
+- **JWT Authentication**: Secure admin authentication for career management
 - **Modular Architecture**: Clean separation of concerns with controllers, models, and routes
 - **MongoDB Atlas integration** with connection caching for serverless
 - **CORS configured** for production and development
@@ -22,21 +24,32 @@ Modular REST API for Powershield with Users and Gallery collections management.
 │   ├── models/
 │   │   ├── User.js           # User model with CRUD operations
 │   │   ├── Gallery.js        # Gallery model with CRUD operations
-│   │   └── Contact.js        # Contact model with CRUD operations
+│   │   ├── Contact.js        # Contact model with CRUD operations
+│   │   ├── Job.js            # Job model for career management
+│   │   ├── JobApplication.js # Job application model
+│   │   └── AdminUser.js      # Admin user model for authentication
 │   ├── controllers/
 │   │   ├── userController.js # User business logic
 │   │   ├── galleryController.js # Gallery business logic
-│   │   └── contactController.js # Contact business logic
+│   │   ├── contactController.js # Contact business logic
+│   │   ├── jobController.js  # Job management logic
+│   │   ├── jobApplicationController.js # Application management logic
+│   │   └── adminUserController.js # Admin user management logic
 │   ├── routes/
 │   │   ├── index.js          # Main router
 │   │   ├── users.js          # User routes
 │   │   ├── gallery.js        # Gallery routes
-│   │   └── contacts.js       # Contact routes
+│   │   ├── contacts.js       # Contact routes
+│   │   ├── jobs.js           # Job management routes
+│   │   ├── applications.js   # Application management routes
+│   │   └── admin.js          # Admin user routes
 │   └── middleware/
-│       └── index.js          # Shared middleware
+│       ├── index.js          # Shared middleware
+│       └── auth.js           # JWT authentication middleware
 ├── api/
 │   └── index.js              # Vercel serverless function entry point
 ├── server.js                 # Local development server
+├── create-admin.js           # Script to create initial admin user
 └── package.json
 ```
 
@@ -54,9 +67,15 @@ cp .env.example .env
 # MONGODB_URI=your_mongodb_connection_string
 # DB_NAME=powershield (optional, defaults to 'powershield')
 # NODE_ENV=development
+# JWT_SECRET=your_jwt_secret_key_here
 ```
 
-3. **Start development server:**
+3. **Create initial admin user:**
+```bash
+npm run create-admin
+```
+
+4. **Start development server:**
 ```bash
 npm run dev
 ```
@@ -101,6 +120,64 @@ The API will be available at `http://localhost:5001`
 - `GET /api/contacts/search?q=term` - Search contacts (Admin)
 - `GET /api/contacts/stats` - Get contact statistics (Admin)
 - `GET /api/contacts/unread-count` - Get unread message count (Admin)
+
+### Career Management
+
+#### Jobs (`/api/jobs`)
+**Public Routes:**
+- `GET /api/jobs/public` - Get all active jobs (Public)
+- `GET /api/jobs/public/:id` - Get job details by ID (Public)
+
+**Admin Routes:** (Require Authentication)
+- `GET /api/jobs` - Get all jobs with application counts (Admin)
+- `GET /api/jobs/:id` - Get job by ID (Admin)
+- `POST /api/jobs` - Create new job posting (Admin)
+- `PUT /api/jobs/:id` - Update job posting (Admin)
+- `PATCH /api/jobs/:id/status` - Update job status (Admin)
+- `DELETE /api/jobs/:id` - Delete job posting (Admin)
+
+#### Job Applications (`/api/applications`)
+**Public Routes:**
+- `POST /api/applications` - Submit job application (Public)
+
+**Admin Routes:** (Require Authentication)
+- `GET /api/applications` - Get all applications (Admin)
+- `GET /api/applications/grouped-by-job` - Get applications grouped by job with statistics (Admin)
+- `GET /api/applications/:id` - Get application by ID (Admin)
+- `GET /api/applications/job/:jobId` - Get applications for specific job (Admin)
+- `GET /api/applications/status/:status` - Get applications by status (Admin)
+- `GET /api/applications/statistics` - Get application statistics (Admin)
+- `PUT /api/applications/:id` - Update application (Admin)
+- `PATCH /api/applications/:id/status` - Update application status (Admin)
+- `DELETE /api/applications/:id` - Delete application (Admin)
+
+#### Admin Users (`/api/admin`)
+- `POST /api/admin/login` - Admin login (returns JWT token)
+- `GET /api/admin/me` - Get current admin user info (Auth required)
+- `POST /api/admin` - Create new admin user (Super Admin only)
+- `GET /api/admin` - Get all admin users (Auth required)
+- `GET /api/admin/:id` - Get admin user by ID (Auth required)
+- `PUT /api/admin/:id` - Update admin user (Auth required)
+- `PATCH /api/admin/:id/status` - Update admin user status (Super Admin only)
+- `DELETE /api/admin/:id` - Delete admin user (Super Admin only)
+
+## Authentication
+
+Career management admin routes require JWT authentication. Include the token in the request header:
+
+```
+Authorization: Bearer <your_jwt_token>
+```
+
+```bash
+POST /api/admin/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "Admin@1234"
+}
+```
 
 ## Query Parameters
 
@@ -171,6 +248,76 @@ GET /api/gallery/search?q=sunset&page=1&limit=10
 ### Search Contact Messages (Admin)
 ```bash
 GET /api/contacts/search?q=john&page=1&limit=10
+```
+
+### Career Management Examples
+
+#### Create Job Posting (Admin)
+```bash
+POST /api/jobs
+Authorization: Bearer <jwt_token>
+Content-Type: application/json
+
+{
+  "title": "Fire Safety Engineer",
+  "description": "We are seeking an experienced Fire Safety Engineer to join our team. The successful candidate will be responsible for designing, installing, and maintaining fire protection systems.",
+  "location": "Dubai, UAE",
+  "type": "Full-time",
+  "experience": "3-5 years",
+  "requirements": [
+    "Bachelor's degree in Fire Engineering or related field",
+    "3+ years experience in fire protection systems",
+    "Civil Defence approval certificate",
+    "Strong knowledge of NFPA standards"
+  ],
+  "salary": "AED 8,000 - 12,000",
+  "status": "active"
+}
+```
+
+#### Submit Job Application (Public)
+```bash
+POST /api/applications
+Content-Type: application/json
+
+{
+  "jobId": "job_001",
+  "fullName": "Ahmed Al-Rashid",
+  "email": "ahmed.rashid@email.com",
+  "phone": "+971501234567",
+  "location": "Dubai, UAE",
+  "experience": "4 years",
+  "skills": ["Fire Safety Systems", "NFPA Standards", "Risk Assessment"],
+  "coverLetter": "I am writing to express my strong interest in the Fire Safety Engineer position...",
+  "linkedinProfile": "https://linkedin.com/in/ahmed-rashid",
+  "portfolioUrl": "https://ahmed-portfolio.com"
+}
+```
+
+#### Admin Login
+```bash
+POST /api/admin/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "Admin@1234"
+}
+
+# Response:
+{
+  "success": true,
+  "message": "Login successful",
+  "data": {
+    "user": {
+      "id": "admin_001",
+      "username": "admin",
+      "email": "admin@powershield.ae",
+      "role": "super_admin"
+    },
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
+}
 ```
 
 ### Get Unread Contacts (Admin)

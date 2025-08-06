@@ -1,0 +1,36 @@
+{
+  "id": "admin_001",
+  "username": "admin",
+  "email": "admin@powershield.ae",
+  "hashedPassword": "$2b$10$rOOl1NkwT4pVTu4zGWr.5eD5zl7YtXqZ8vDy1fz0n6yMHnFyKyZgm",
+  "role": "super_admin",
+  "isActive": true,
+  "createdAt": new Date(),
+  "updatedAt": new Date(),
+  "lastLoginAt": null
+}
+
+// To insert this document, you can use MongoDB Compass, MongoDB Shell, or any MongoDB client:
+
+// Option 1: MongoDB Shell
+use powershield;
+db.admin_users.insertOne({
+  "id": "admin_001",
+  "username": "admin",
+  "email": "admin@powershield.ae",
+  "hashedPassword": "$2b$10$rOOl1NkwT4pVTu4zGWr.5eD5zl7YtXqZ8vDy1fz0n6yMHnFyKyZgm",
+  "role": "super_admin",
+  "isActive": true,
+  "createdAt": new Date(),
+  "updatedAt": new Date(),
+  "lastLoginAt": null
+});
+
+// Option 2: Using the create-admin script (recommended)
+// Run: npm run create-admin
+
+// Login credentials after insertion:
+// Email: admin@powershield.ae
+// Password: Admin@1234
+
+// Note: The hashedPassword above is the bcrypt hash of "Admin@1234"

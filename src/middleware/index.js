@@ -1,9 +1,10 @@
-import { connectToDatabase } from '../config/database.js'
+const { connectToDatabase } = require('../config/database.js');
 
 // Middleware to ensure database connection
-export const ensureDBConnection = async (req, res, next) => {
+const ensureDBConnection = async (req, res, next) => {
   try {
-    await connectToDatabase()
+    const { db } = await connectToDatabase()
+    req.db = db  // Make database available to controllers
     next()
   } catch (error) {
     console.error('Database connection failed:', error.message)
@@ -32,7 +33,7 @@ export const ensureDBConnection = async (req, res, next) => {
 }
 
 // Error handling middleware
-export const errorHandler = (err, req, res, next) => {
+const errorHandler = (err, req, res, next) => {
   console.error('Unhandled error:', err)
   
   // Mongoose/MongoDB errors
@@ -67,7 +68,7 @@ export const errorHandler = (err, req, res, next) => {
 }
 
 // 404 handler
-export const notFoundHandler = (req, res) => {
+const notFoundHandler = (req, res) => {
   res.status(404).json({
     success: false,
     message: 'API endpoint not found'
@@ -75,14 +76,14 @@ export const notFoundHandler = (req, res) => {
 }
 
 // Request logging middleware
-export const requestLogger = (req, res, next) => {
+const requestLogger = (req, res, next) => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`)
   next()
 }
 
-export default {
+module.exports = {
   ensureDBConnection,
   errorHandler,
   notFoundHandler,
   requestLogger
-}
+};

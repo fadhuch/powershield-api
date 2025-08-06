@@ -1,15 +1,15 @@
-import { getDb } from '../config/database.js'
-import { ObjectId } from 'mongodb'
+const { getDb } = require('../config/database.js');
+const { ObjectId } = require('mongodb');
 
 const COLLECTION_NAME = 'users'
 
 // Validation helpers
-export const validateEmail = (email) => {
+const validateEmail = (email) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   return emailRegex.test(email)
 }
 
-export class UserModel {
+class UserModel {
   static getCollection() {
     return getDb().collection(COLLECTION_NAME)
   }
@@ -130,4 +130,4 @@ export class UserModel {
   }
 }
 
-export default UserModel
+module.exports = { UserModel, validateEmail };

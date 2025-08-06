@@ -1,15 +1,15 @@
-import { getDb } from '../config/database.js'
-import { ObjectId } from 'mongodb'
+const { getDb } = require('../config/database.js');
+const { ObjectId } = require('mongodb');
 
 const COLLECTION_NAME = 'contacts'
 
 // Validation helpers
-export const validateEmail = (email) => {
+const validateEmail = (email) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   return emailRegex.test(email)
 }
 
-export const validateContactData = (data) => {
+const validateContactData = (data) => {
   const errors = []
   if (!data.email || !validateEmail(data.email)) {
     errors.push('Valid email address is required')
@@ -17,7 +17,7 @@ export const validateContactData = (data) => {
   return errors
 }
 
-export class ContactModel {
+class ContactModel {
   static getCollection() {
     return getDb().collection(COLLECTION_NAME)
   }
@@ -217,4 +217,4 @@ export class ContactModel {
   }
 }
 
-export default ContactModel
+module.exports = { ContactModel, validateContactData };

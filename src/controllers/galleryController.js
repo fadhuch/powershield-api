@@ -1,6 +1,6 @@
-import GalleryModel from '../models/Gallery.js'
+const GalleryModel = require('../models/Gallery.js');
 
-export class GalleryController {
+class GalleryController {
   // Create a new gallery item
   static async createGalleryItem(req, res) {
     try {
@@ -304,4 +304,4 @@ export class GalleryController {
   }
 }
 
-export default GalleryController
+module.exports = GalleryController;

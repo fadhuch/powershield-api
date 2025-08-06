@@ -1,6 +1,6 @@
-import express from 'express'
-import ContactController from '../controllers/contactController.js'
-import { ensureDBConnection } from '../middleware/index.js'
+const express = require('express');
+const ContactController = require('../controllers/contactController.js');
+const { ensureDBConnection } = require('../middleware/index.js');
 
 const router = express.Router()
 
@@ -22,4 +22,4 @@ router.put('/:id/reply', ContactController.markAsReplied)
 router.put('/:id/archive', ContactController.archiveContact)
 router.delete('/:id', ContactController.deleteContact)
 
-export default router
+module.exports = router;

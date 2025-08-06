@@ -1,6 +1,6 @@
-import UserModel, { validateEmail } from '../models/User.js'
+const { UserModel, validateEmail } = require('../models/User.js');
 
-export class UserController {
+class UserController {
   // Create a new user
   static async createUser(req, res) {
     try {
@@ -238,4 +238,4 @@ export class UserController {
   }
 }
 
-export default UserController
+module.exports = UserController;

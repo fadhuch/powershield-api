@@ -1,7 +1,7 @@
-import { MongoClient } from 'mongodb'
-import dotenv from 'dotenv'
+const { MongoClient } = require('mongodb');
+const dotenv = require('dotenv');
 
-dotenv.config()
+dotenv.config();
 
 const MONGODB_URI = process.env.MONGODB_URI
 const DB_NAME = process.env.DB_NAME || 'powershield'
@@ -15,7 +15,7 @@ if (!MONGODB_URI) {
 let cachedClient = null
 let cachedDb = null
 
-export async function connectToDatabase() {
+async function connectToDatabase() {
   if (cachedClient && cachedDb) {
     return { client: cachedClient, db: cachedDb }
   }
@@ -59,17 +59,35 @@ async function createIndexes(db) {
     await db.collection('contacts').createIndex({ email: 1 })
     await db.collection('contacts').createIndex({ name: 'text', email: 'text', message: 'text' })
     
+    // Create indexes for jobs collection
+    await db.collection('jobs').createIndex({ status: 1 })
+    await db.collection('jobs').createIndex({ createdAt: -1 })
+    await db.collection('jobs').createIndex({ title: "text", description: "text" })
+    
+    // Create indexes for job_applications collection
+    await db.collection('job_applications').createIndex({ jobId: 1 })
+    await db.collection('job_applications').createIndex({ email: 1 })
+    await db.collection('job_applications').createIndex({ status: 1 })
+    await db.collection('job_applications').createIndex({ createdAt: -1 })
+    await db.collection('job_applications').createIndex({ firstName: "text", lastName: "text", email: "text", skills: "text" })
+
+    // Create indexes for admin_users collection
+    await db.collection('admin_users').createIndex({ username: 1 }, { unique: true })
+    await db.collection('admin_users').createIndex({ email: 1 }, { unique: true })
+    await db.collection('admin_users').createIndex({ role: 1 })
+    await db.collection('admin_users').createIndex({ isActive: 1 })
+    
     console.log('✅ Database indexes created')
   } catch (error) {
     console.warn('⚠️ Index creation warning:', error.message)
   }
 }
 
-export function getDb() {
+function getDb() {
   if (!cachedDb) {
     throw new Error('Database not connected. Call connectToDatabase first.')
   }
   return cachedDb
 }
 
-export default { connectToDatabase, getDb }
+module.exports = { connectToDatabase, getDb };

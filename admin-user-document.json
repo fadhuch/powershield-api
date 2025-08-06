@@ -1,0 +1,12 @@
+{
+  "_id": "ObjectId('6893314a92b3a42e568d3bf5')",
+  "id": "admin_4ab5f9f8",
+  "username": "admin",
+  "email": "admin@powershield.ae",
+  "hashedPassword": "$2b$10$XqjVkqhOtX5pYzX5pYzX5eJ5pYzX5pYzX5pYzX5pYzX5pYzX5pYzX5",
+  "role": "super_admin",
+  "isActive": true,
+  "createdAt": "2025-08-06T10:41:14.105Z",
+  "updatedAt": "2025-08-06T10:41:14.105Z",
+  "lastLoginAt": null
+}

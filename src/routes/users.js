@@ -1,6 +1,6 @@
-import express from 'express'
-import UserController from '../controllers/userController.js'
-import { ensureDBConnection } from '../middleware/index.js'
+const express = require('express');
+const UserController = require('../controllers/userController.js');
+const { ensureDBConnection } = require('../middleware/index.js');
 
 const router = express.Router()
 
@@ -16,4 +16,4 @@ router.get('/:id', UserController.getUserById)
 router.put('/:id', UserController.updateUser)
 router.delete('/:id', UserController.deleteUser)
 
-export default router
+module.exports = router;

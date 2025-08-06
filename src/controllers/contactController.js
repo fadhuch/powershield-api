@@ -1,6 +1,6 @@
-import ContactModel, { validateContactData } from '../models/Contact.js'
+const { ContactModel, validateContactData } = require('../models/Contact.js');
 
-export class ContactController {
+class ContactController {
   // Create a new contact message
   static async createContact(req, res) {
     try {
@@ -337,4 +337,4 @@ export class ContactController {
   }
 }
 
-export default ContactController
+module.exports = ContactController;

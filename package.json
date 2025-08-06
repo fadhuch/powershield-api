@@ -1,8 +1,7 @@
 {
   "name": "powershield-api",
   "version": "2.0.0",
-  "description": "Modular REST API for Powershield with Users and Gallery collections",
-  "type": "module",
+  "description": "Modular REST API for Powershield with Users, Gallery, Contacts, and Career Management collections",
   "main": "api/index.js",
   "scripts": {
     "start": "node server.js",
@@ -11,21 +10,35 @@
     "build": "echo 'No build step required'",
     "test": "echo \"Error: no test specified\" && exit 1",
     "test-connection": "node test-connection.js",
-    "ssl-help": "node ssl-help.js"
+    "ssl-help": "node ssl-help.js",
+    "create-admin": "node create-admin.js"
   },
   "engines": {
     "node": ">=18.x"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^17.2.0",
     "express": "^4.19.2",
-    "mongodb": "^6.17.0"
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.17.0",
+    "multer": "^2.0.2",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
   },
-  "keywords": ["api", "mongodb", "express", "users", "gallery", "modular"],
+  "keywords": [
+    "api",
+    "mongodb",
+    "express",
+    "users",
+    "gallery",
+    "contacts",
+    "careers",
+    "modular"
+  ],
   "author": "",
   "license": "MIT"
 }

@@ -1,9 +1,9 @@
-import { getDb } from '../config/database.js'
-import { ObjectId } from 'mongodb'
+const { getDb } = require('../config/database.js');
+const { ObjectId } = require('mongodb');
 
 const COLLECTION_NAME = 'gallery'
 
-export class GalleryModel {
+class GalleryModel {
   static getCollection() {
     return getDb().collection(COLLECTION_NAME)
   }
@@ -202,4 +202,4 @@ export class GalleryModel {
   }
 }
 
-export default GalleryModel
+module.exports = GalleryModel;
